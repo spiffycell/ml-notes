@@ -1,30 +1,10 @@
-class AutoEncoder(NeuralNetwork):
-	"""
-	Simple autoencoder object.
+class Encoder:
+    """ The first portion of the Autoencoder network."""
+    def __init__(self):
+        """ Initialize the Encoder object."""
+        return
 
-	The simplest design is a feed-forward \
-	architecture
-	- Structure like a single-layer perceptron
-		- Used in multi-layer perceptrons
-
-	Single-layer perceptrons:
-	https://medium.com/dataprophet/a-comprehensive-guide-to-single-layer-perceptrons-in-artificial-intelligence-7e0b071c88b5
-
-	In our design, we need to pay attention \
-	to a four different model hyperparameters:
-	- code size
-	- layer number
-	- nodes per layer
-	- loss function
-	"""
-	
-	def __init__(self):
-		""" Initialize autoencoder."""
-		self.input_layers = []
-		self.output_layers = []
-		return
-
-	def compress(data):
+	def compress(self, data):
 		"""
 		Compress data into a latent state \
 		representation.
@@ -41,7 +21,7 @@ class AutoEncoder(NeuralNetwork):
 		# https://medium.com/mlearning-ai/latent-space-representation-a-hands-on-tutorial-on-autoencoders-in-tensorflow-57735a1c0f3f
 		return data
 
-	def encoder(data):
+	def run(self, data):
 		"""
 		The input portion.
 		Compress input data.
@@ -50,6 +30,44 @@ class AutoEncoder(NeuralNetwork):
 		"""
 		comp_data = compress(data)
 		return comp_data
+
+
+class AutoEncoder(NeuralNetwork):
+	"""
+	Simple autoencoder object.
+
+	The simplest design is a feed-forward \
+	architecture
+	- Structure like a single-layer perceptron
+	    - https://medium.com/dataprophet/a-comprehensive-guide-to-single-layer-perceptrons-in-artificial-intelligence-7e0b071c88b5
+		- Used in multi-layer perceptrons
+
+    The auto-encoder is trained via backpropagation.
+    https://www.askpython.com/python/examples/backpropagation-in-python
+
+    It doesn't need labels
+    - With enough data, we can get high performance on __specific__ input data
+        - This is data-specificity
+            - It can only compres data highly similar to previously-used data
+
+    Due to the compression stage, autoencoders are lossy:
+    - Output data is degraded in relation to the input data
+
+	In our design, we need to pay attention \
+	to a four different model hyperparameters:
+	- code size
+        - How many nodes begin the bottleneck()?
+            - fewer nodes -> higher compression
+	- layer number
+	- nodes per layer
+	- loss function
+	"""
+	
+	def __init__(self):
+		""" Initialize autoencoder."""
+		self.input_layers = []
+		self.output_layers = []
+		return
 
 	def is_relevant(feature):
 		"""
@@ -99,8 +117,9 @@ class AutoEncoder(NeuralNetwork):
 		Through this process, the autoencoder \
 		learns the important features of the data.
 		"""
-		# first, we compress the data
-		comp_data = encoder(data)
+        # we start with the encoder segment
+        encoder = Encoder()
+        encoder.run(data)
 		
 		# then we handle the encoded data
 		bot_data = bottleneck(comp_data)
