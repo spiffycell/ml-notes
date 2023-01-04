@@ -1,0 +1,107 @@
+#!/usr/bin/python3
+""" Execute agent run."""
+
+# standard libraries
+import argparse
+import logging
+import sys
+
+# non-standard libraries
+from primitives import Agent, Path, State, Strategy, Task
+
+
+def train(args):
+    """ Begin training."""
+    # load template
+    logging.info("Loading template...")
+    strategy = Strategy()
+    strategy.load(args.train)
+    logging.info("Strategy loaded!")
+
+    # declare a starting point
+    starting_point = State(0, 0)  
+    ending_point = State((strategy.rows - 1), (strategy.cols - 1))
+
+    # spawn the agent at the starting point
+    agent = Agent(current_state=starting_point)
+    # choose a strategy
+    agent.choose_policy(args.policy)
+
+    # initialize the path (action sequence)
+    path = Path()
+
+    # traverse the state space, following the template,
+    # in accordance with the assigned strategy
+    # logging actions along the way
+    # and saving the action sequence, labeled with the task name
+    while agent.current_state.coord != ending_point.coord:
+        logging.info("Current state is: %s", agent.current_state.coord)
+        logging.info("Considering possible actions")
+        # evaluate adjacent values and compare with strategy
+        optimal_entry = agent.check_adjacents(template)
+
+        # take action
+        logging.info("Taking an action")
+        action = agent.change_state(optimal_entry, 'train')
+        agent.take_cost_reward()
+        agent.check_health()
+
+        logging.info("Logging the action")
+        path.log_moves(action)
+
+    logging.info("Reached the endpoint!")
+
+    # save your training output
+    logging.info("Saving action sequence as task")
+    task = args.train.replace('strategies/', '').replace('.json', '')
+    path.save(task)
+    return
+
+
+def test(args):
+    """ Begin testing."""
+    # load task file
+    task = Task()
+    task.load(args.test)
+
+    # set starting point
+    starting_point = State(0, 0)  
+    logging.info("Starting at: %s", starting_point.coord)
+
+    # spawn agent
+    agent = Agent(current_state=starting_point)
+
+    # run through actions
+    for task in task.task_data['task']:
+        agent.change_state(task, 'test')
+
+    # display the steps traversed
+    logging.info("Traversal path: %s", agent.traversal)
+    return
+
+
+def main(args):
+    """ Main function."""
+    # initialize logging
+    logging.basicConfig(level=logging.INFO)
+
+    # if training
+    if args.train:
+        train(args)
+    # if testing
+    elif args.test:
+        test(args)
+    else:
+        logging.critical("Please specify a mode: --train or --test.")
+        sys.exit(1)
+
+
+if __name__ == "__main__":
+    """ Spawn argument parser and main."""
+    # collect arguments
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--train')
+    parser.add_argument('--test')
+    parser.add_argument('--policy')
+    args = parser.parse_args()
+    main(args)
