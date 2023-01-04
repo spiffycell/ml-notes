@@ -140,7 +140,7 @@ class AutoEncoder(NeuralNetwork):
         # we start with the encoder segment
         encoder = Encoder()
         encoder.run(data)
-		
+
 		# then we handle the encoded data
 		bot_data = bottleneck(comp_data)
 		
