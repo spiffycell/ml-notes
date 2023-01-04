@@ -58,15 +58,35 @@ class AutoEncoder(NeuralNetwork):
 	- code size
         - How many nodes begin the bottleneck()?
             - fewer nodes -> higher compression
+                encoder goes on.
 	- layer number
 	- nodes per layer
+        - For encoders, we want to decrease nodes per layer
+        - For decoders, we wnt to increase nodes per layer
 	- loss function
+        - either
+            - binary cross-entropy 
+                - appropriate for instances where input_values in range(0, 1)
+                - https://pythonguides.com/binary-cross-entropy-tensorflow/
+                - https://towardsdatascience.com/understanding-binary-cross-entropy-log-loss-a-visual-explanation-a3ac6025181a?gi=de3df99d9a42
+            - mean square error
 	"""
 	
 	def __init__(self):
 		""" Initialize autoencoder."""
 		self.input_layers = []
 		self.output_layers = []
+        self.architectures = {
+                # https://medium.com/@syoya/what-happens-in-sparse-autencoder-b9a5a69da5c6 
+                "sparse": {}, 
+                # https://deepai.org/machine-learning-glossary-and-terms/contractive-autoencoder 
+                "contractive": {}, 
+                # https://towardsdatascience.com/convolutional-autoencoders-for-image-noise-reduction-32fce9fc1763
+                "convolutional": {}, 
+                # https://towardsdatascience.com/denoising-autoencoders-explained-dbb82467fc2 
+                "denoising": {}, 
+                # https://www.topbots.com/variational-autoencoders-explained/ 
+                "variational": {}}
 		return
 
 	def is_relevant(feature):
