@@ -4,13 +4,13 @@ class Encoder:
         """ Initialize the Encoder object."""
         return
 
-	def compress(self, data):
-		"""
-		Compress data into a latent state \
-		representation.
+    def compress(self, data):
+        """
+        Compress data into a latent state \
+        representation.
 
-		The purpose of this is to generate \
-		a new representation of data with \
+        The purpose of this is to generate \
+        a new representation of data with \
 		reduced dimensionality.
 		"""
 
@@ -19,25 +19,25 @@ class Encoder:
 		#
 		# Latent space Tutorial with TensorFlow
 		# https://medium.com/mlearning-ai/latent-space-representation-a-hands-on-tutorial-on-autoencoders-in-tensorflow-57735a1c0f3f
-		return data
+        return data
 
-	def run(self, data):
-		"""
+    def run(self, data):
+        """
 		The input portion.
 		Compress input data.
 		This is a feedforward densely-connected \
 		network.
 		"""
-		comp_data = compress(data)
-		return comp_data
+        comp_data = compress(data)
+        return comp_data
 
 
 class AutoEncoder(NeuralNetwork):
-	"""
-	Simple autoencoder object.
+    """
+    Simple autoencoder object.
 
-	The simplest design is a feed-forward \
-	architecture
+    The simplest design is a feed-forward \
+    architecture
 	- Structure like a single-layer perceptron
 	    - https://medium.com/dataprophet/a-comprehensive-guide-to-single-layer-perceptrons-in-artificial-intelligence-7e0b071c88b5
 		- Used in multi-layer perceptrons
@@ -71,11 +71,11 @@ class AutoEncoder(NeuralNetwork):
                 - https://towardsdatascience.com/understanding-binary-cross-entropy-log-loss-a-visual-explanation-a3ac6025181a?gi=de3df99d9a42
             - mean square error
 	"""
-	
-	def __init__(self):
-		""" Initialize autoencoder."""
-		self.input_layers = []
-		self.output_layers = []
+
+    def __init__(self):
+        """ Initialize autoencoder."""
+        self.input_layers = []
+        self.output_layers = []
         self.architectures = {
                 # https://medium.com/@syoya/what-happens-in-sparse-autencoder-b9a5a69da5c6 
                 "sparse": {}, 
@@ -87,22 +87,22 @@ class AutoEncoder(NeuralNetwork):
                 "denoising": {}, 
                 # https://www.topbots.com/variational-autoencoders-explained/ 
                 "variational": {}}
-		return
+        return
 
-	def is_relevant(feature):
-		"""
-		Determine if feature is relevant \
-		to the data representation.
+    def is_relevant(feature):
+        """
+        Determine if feature is relevant \
+        to the data representation.
 
 		Perform element-wise activation on \
 		the network weights and biases.
 		"""
-		if relevant:
-			return True
-		return False
+        if relevant:
+            return True
+        return False
 
-	def bottleneck(compressed_data):
-		"""
+    def bottleneck(compressed_data):
+        """
 		Bottleneck portion.
 		Determine most important features \
 		for data reconstruction; which data \
@@ -111,28 +111,27 @@ class AutoEncoder(NeuralNetwork):
 		"""
 
 		# we need to consider representation size.
-		size = len(compressed_data)
+        size = len(compressed_data)
 
 		# perform element-wise activation on \
 		# the weights and biases of the network
-		for feature in compressed_data:
-			if is_relevant(feature):
-				compressed_data.preserve(feature)
-			else:
-				compressed_data.discard(feature)
-		
-		return bot_data
+        for feature in compressed_data:
+            if is_relevant(feature):
+                compressed_data.preserve(feature)
+            else:
+                compressed_data.discard(feature)
+        return bot_data
 
-	def decoder(encoded_data):
-		"""
+    def decoder(encoded_data):
+        """
 		The output portion.
 		Reconstruct encoded data.
 		"""
-		dec = encoded_data
-		return dec_data
+        dec = encoded_data
+        return dec_data
 
-	def run(data):
-		"""
+    def run(data):
+        """
 		Run autoencoder operations.
 		Through this process, the autoencoder \
 		learns the important features of the data.
@@ -142,9 +141,9 @@ class AutoEncoder(NeuralNetwork):
         encoder.run(data)
 
 		# then we handle the encoded data
-		bot_data = bottleneck(comp_data)
+        bot_data = bottleneck(comp_data)
 		
 		# finally we reconstruct it
-		dec_data = decoder(bot_data)
-		
-		return dec_data
+        dec_data = decoder(bot_data)	
+
+        return dec_data
